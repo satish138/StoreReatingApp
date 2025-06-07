@@ -20,6 +20,15 @@ const getUserByEmail = (email) => {
   });
 };
 
+const checkUserExists = (email) => {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM users WHERE email = ?';
+    db.query(query, [email], (err, result) => {
+      if (err) return reject(err);
+      resolve(result.length > 0);
+    });
+  });
+};
 
 const getAllUsers = (filters) => {
   return new Promise((resolve, reject) => {
@@ -62,6 +71,4 @@ const updateUserRole = (userId, role) => {
   });
 };
 
-
-
-module.exports = { createUser, getUserByEmail, getAllUsers,updateUserRole };
+module.exports = { createUser, getUserByEmail, checkUserExists, getAllUsers, updateUserRole };

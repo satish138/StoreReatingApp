@@ -2,22 +2,29 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
 
-
 const registerUser = async (req, res) => {
   const { name, email, password, address, role } = req.body;
+
   try {
-    const validRoles = ['System Administrator', 'Normal User', 'Store Owner'];
-    if (!validRoles.includes(role)) {
-      return res.status(400).json({ message: 'Invalid role' });
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Required fields missing' });
     }
+
+    // Check if user already exists
+    const exists = await userModel.checkUserExists(email);
+    if (exists) {
+      return res.status(400).json({ message: 'Email already registered' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     await userModel.createUser(name, email, hashedPassword, address, role);
+
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
+    console.error('Registration error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -53,13 +60,10 @@ const loginUser = async (req, res) => {
   }
 };
 
-
-
-
 const getAllUsers = async (req, res) => {
   try {
     const filters = req.query || {};
-    const users = await userModel.getAllUsers(filters); 
+    const users = await userModel.getAllUsers(filters);
     res.json(users);
   } catch (err) {
     console.error('Error fetching users:', err);
