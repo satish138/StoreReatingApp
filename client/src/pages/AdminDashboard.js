@@ -35,7 +35,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchUsers();
     fetchStats();
-  });
+  },[]);
 
   const handleRoleChange = async (userId, newRole) => {
     try {
