@@ -44,7 +44,7 @@ const RegisterPage = () => {
     try {
       await API.post('/auth/register', form);
       toast.success('Registered successfully!', {
-        position: toast.POSITION.TOP_RIGHT,
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -56,7 +56,7 @@ const RegisterPage = () => {
     } catch (err) {
       const message = err.response?.data?.message || err.message || 'Registration failed';
       toast.error(message, {
-        position: toast.POSITION.TOP_RIGHT,
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
